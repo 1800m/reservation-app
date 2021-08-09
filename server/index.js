@@ -30,7 +30,7 @@ mongoose.connect(config.DB_URI, {
 //     if (err) throw err
 //     console.log(result);
 //   })
-//   // const fakeDb = new FakeDb()
+//   // const fakeDb = new FakeDB()
 //   // fakeDb.initDb()
 // })
 
