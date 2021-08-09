@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const config = require('./config/dev')
+const config = require('./config')  // indexは省略可
 const FakeDB = require('./fake-db')
 const productRoutes = require('./routes/products')
+const path = require('path')
 
 mongoose.connect(config.DB_URI, {
   useNewUrlParser: true,
@@ -11,9 +12,12 @@ mongoose.connect(config.DB_URI, {
   // useFindAndModify: false
 }).then(
   () => {
+    if (process.env.NODE_ENV !== 'production') {
+      // 本番で初期化はNG
       const fakeDb = new FakeDB()
       // fakeDb.seeDb()
-      fakeDb.initDb()
+      // fakeDb.initDb()  // 必要に応じて初期化
+    }
   }
 )
 
@@ -41,9 +45,17 @@ app.use('/api/v1/products', productRoutes)
 //     res.json({'success': true})
 // })
 
+if (process.env.NODE_ENV === 'production') {
+  const appPath = path.join(__dirname, '..', 'dist', 'reservation-app')
+  app.use(express.static(appPath))
+  app.get("*", function(req, res) {
+    res.sendFile(path.resolve(appPath, 'index.html'))
+  })
+}
+
 // 環境が変わった場合への対応
 const PORT = process.env.PORT || '3001'
 
 app.listen(PORT, function() {
-    console.log('I am running!')
+  console.log('I am running!')
 })
