@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { products } from 'src/app/products'
+// import { products } from 'src/app/products'
 import { HttpClient } from '@angular/common/http'
 import { Observable, Subscriber } from 'rxjs';
 
